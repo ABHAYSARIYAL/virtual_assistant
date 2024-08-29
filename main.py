@@ -1,38 +1,53 @@
+import webbrowser
+import speech_recognition as sr
 import pyttsx3
 import platform
 import os
+import datetime
 
 def say(text):
-    # Check the operating system
     if platform.system() == "Darwin":  # macOS
-        # Use Siri's voice with the 'say' command
         os.system(f'say -v "Siri" {text}')
     elif platform.system() == "Windows":  # Windows
-        # Initialize pyttsx3 engine
         engine = pyttsx3.init()
-
-        # List available voices
         voices = engine.getProperty('voices')
-        for index, voice in enumerate(voices):
-            print(f"Voice {index}: {voice.name}")
-
-        # Choose a voice (example index 0, change as needed)
-        # You may need to experiment with different voices to find one you like
         engine.setProperty('voice', voices[0].id)  # Change index to select different voice
-
-        # Set speech rate (words per minute)
         engine.setProperty('rate', 150)  # Adjust as needed
-
-        # Set volume (0.0 to 1.0)
         engine.setProperty('volume', 1.0)  # Adjust as needed
-
-        # Speak the text
         engine.say(text)
         engine.runAndWait()
     elif platform.system() == "Linux":  # Linux
-        # On Linux, you can use 'espeak' or 'festival'
         os.system(f'espeak "{text}"')
+
+def takeCommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold = 1
+        audio = r.listen(source)
+        try:
+            query = r.recognize_google(audio, language="en-in")
+            print(f"User said: {query}")
+            return query
+        except sr.UnknownValueError:
+            print("Sorry, I did not catch that.")
+            return None
 
 if __name__ == '__main__':
     print('PyCharm')
-    say("Hello, I am Edith your virtual assistant")
+    say("Hello, I am Shyamlal, your virtual assistant.")
+    while True:
+        query = takeCommand()
+        if query:  # Check if query is not None
+            sites = [["youtube", "https://www.youtube.com"], ["wikipedia", "https://www.wikipedia.com"], ["google", "https://www.google.com"]]
+            for site in sites:
+                if f"open {site[0]}".lower() in query.lower():
+                    say("Opening " + site[0] + " sir...")
+                    webbrowser.open(site[1])
+                    break
+            if "open music" in query.lower():
+                musicpath = "C:/Users/abhay/Downloads/vinee-heights-126947.mp3"
+                os.system(f"start {musicpath}")
+            if "the time" in query.lower():
+                strfTime = datetime.datetime.now().strftime("%H:%M:%S")
+                say(f"Sir, the time is {strfTime}")
