@@ -35,7 +35,7 @@ def takeCommand():
 
 if __name__ == '__main__':
     print('PyCharm')
-    say("Hello, I am Shyamlal, your virtual assistant.")
+    say("Hello, I am vision, your virtual assistant.")
     while True:
         query = takeCommand()
         if query:  # Check if query is not None
@@ -51,3 +51,19 @@ if __name__ == '__main__':
             if "the time" in query.lower():
                 strfTime = datetime.datetime.now().strftime("%H:%M:%S")
                 say(f"Sir, the time is {strfTime}")
+
+            if "whatsapp" in query.lower():
+                os.system(f"open/")
+
+            # To open WhatsApp Desktop (if installed, works for Windows)
+            if "whatsapp" in query.lower():
+                say("Opening WhatsApp on your desktop...")
+                os.system("start whatsapp:")
+
+            if "good job" in query.lower():
+                say("thank you sir")
+
+                # Terminate the program if "go to sleep" command is detected
+            if "go to sleep" in query.lower():
+                say("Goodbye, sir. Going to sleep.")
+                exit()  # Terminate the program
